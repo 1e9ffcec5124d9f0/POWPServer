@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31919.166
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ReServer", "ReServer.vcxproj", "{A479EDFB-05E0-4986-8D06-CE7D291B70F1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A479EDFB-05E0-4986-8D06-CE7D291B70F1}.Debug|x64.ActiveCfg = Debug|x64
+		{A479EDFB-05E0-4986-8D06-CE7D291B70F1}.Debug|x64.Build.0 = Debug|x64
+		{A479EDFB-05E0-4986-8D06-CE7D291B70F1}.Release|x64.ActiveCfg = Release|x64
+		{A479EDFB-05E0-4986-8D06-CE7D291B70F1}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DCAF35A9-1992-4ABF-A363-E7866AC5E20B}
+	EndGlobalSection
+EndGlobal
