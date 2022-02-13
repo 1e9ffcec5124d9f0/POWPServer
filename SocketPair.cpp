@@ -8,6 +8,7 @@ SocketPair::SocketPair(QTcpSocket* Left,quint8 difficulty ,QObject* parent):QObj
 	if (!right->isOpen())
 	{
 		left->close();
+		emit iNeedDelete(this);
 		deleteLater();
 	}
 	else
@@ -37,7 +38,7 @@ bool SocketPair::checkKey(quint64 key)
 {
 	QByteArray keyArray((char*)&key, 8);
 	cache += keyArray;
-	QByteArray cache = QCryptographicHash::hash(cache, QCryptographicHash::Md5);
+	cache = QCryptographicHash::hash(cache, QCryptographicHash::Md5);
 	quint64 check = 0;
 	memcpy_s((uchar*)&check, 8, cache.constData(), 8);
 	check = check << (64 - difficultyWall);
