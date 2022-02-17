@@ -1,10 +1,11 @@
-#include <QtCore/QCoreApplication>
+#include<QtWidgets/qapplication.h>
 #include"tools.h"
-#include"NetManager.h"
+#include"MainWindow.h"
 int main(int argc, char *argv[])
 {
-    QCoreApplication a(argc, argv);
+    QApplication a(argc, argv);
     loadSetting();
-    NetManager temp;
+    MainWindow b;
+    b.show();
     return a.exec();
 }

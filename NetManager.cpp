@@ -1,5 +1,5 @@
 #include"NetManager.h"
-NetManager::NetManager()
+NetManager::NetManager(QObject* parent):QObject(parent)
 {
 	globalDifficultyWall = globalSetting["globalDifficultyWall"].toInt();
 	server = new QTcpServer(this);
@@ -31,6 +31,7 @@ void NetManager::acceptNewConnection()
 	}
 	clientList.push_back(x);
 	connect(x, &SocketPair::iNeedDelete, this, &NetManager::socketPairDisconnected);
+	emit recvNewConnectionSignal(x);
 }
 
 void NetManager::socketPairDisconnected(SocketPair* x)
