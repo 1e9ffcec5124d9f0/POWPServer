@@ -8,7 +8,7 @@ class NetManager:public QObject
 public:
 	NetManager();
 	QTcpServer* server;
-	quint8 globalDifficultyWall;
+	quint32 globalDifficultyWall;
 	QList<SocketPair*> clientList;
 public slots:
 	void acceptNewConnection();

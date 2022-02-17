@@ -5,15 +5,17 @@
 #include<QtCore/qcryptographichash.h>
 #include<QtCore/qdatetime.h>
 #include<QtCore/qstring.h>
+#include<iostream>
 extern QJsonObject globalSetting;
 #define STATUS_CODE_SENDDATA 0
-#define STATUS_CODE_INIT 1
-#define STATUS_CODE_PING 2
-#define STATUS_CODE_PONG 3
+#define STATUS_CODE_INIT_LINER 1
+#define STATUS_CODE_INIT_EXPONENTIAL 2
+#define STATUS_CODE_PING 3
+#define STATUS_CODE_PONG 4
 struct POWPHeader
 {
 	quint8 flag[4] = { 'P','O','W','P' };//POWP
-	quint8 difficulty = 0;//DiffcultyWall
+	quint32 difficulty = 0;//DiffcultyWall
 	quint8 statusCode;
 	quint64 key = 0;
 	quint64 dataLen = 0;

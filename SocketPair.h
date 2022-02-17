@@ -8,13 +8,15 @@ class SocketPair:public QObject
 	Q_OBJECT
 protected:
 	void initPOWP();
-	bool checkKey(quint64 key);
+	bool checkKeyExponential(quint64 key);
+	bool checkKeyLiner(quint64 key);
 public:
 	QTcpSocket* left;
 	QTcpSocket* right;
 	QByteArray cache;
-	quint8 difficultyWall;
-	SocketPair(QTcpSocket* Left, quint8 difficulty, QObject* parent);
+	quint32 difficultyWall;
+	bool protocolType;
+	SocketPair(QTcpSocket* Left, quint32 difficulty,bool type, QObject* parent);
 public slots:
 	void someoneDisconnected();
 	void leftReadyRead();

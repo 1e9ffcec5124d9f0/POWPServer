@@ -1,6 +1,7 @@
 #include"SocketPair.h"
-SocketPair::SocketPair(QTcpSocket* Left,quint8 difficulty ,QObject* parent):QObject(parent)
+SocketPair::SocketPair(QTcpSocket* Left,quint32 difficulty ,bool type,QObject* parent):QObject(parent)
 {
+	protocolType = type;
 	left = Left;
 	left->setParent(this);
 	right = new QTcpSocket(this);
@@ -27,14 +28,18 @@ void SocketPair::initPOWP()		//当初始建立连接时调用此
 	POWPHeader header;
 	header.dataLen = 0;
 	header.difficulty = difficultyWall;
-	header.statusCode = STATUS_CODE_INIT;
+	if (protocolType)
+	{
+		header.statusCode = STATUS_CODE_INIT_LINER;
+	}
+	else header.statusCode = STATUS_CODE_INIT_EXPONENTIAL;
 	header.key = 0;
 	QByteArray head((char*)&header, sizeof(POWPHeader));
 	cache = getRandomBytes(8);
 	head += cache;	//初始字节
 	left->write(head);
 }
-bool SocketPair::checkKey(quint64 key)
+bool SocketPair::checkKeyExponential(quint64 key)
 {
 	QByteArray keyArray((char*)&key, 8);
 	cache += keyArray;
@@ -47,6 +52,19 @@ bool SocketPair::checkKey(quint64 key)
 		return false;
 	}
 	return true;
+}
+bool SocketPair::checkKeyLiner(quint64 key)
+{
+	QByteArray keyArray((char*)&key, 8);
+	cache += keyArray;
+	cache = QCryptographicHash::hash(cache, QCryptographicHash::Md5);
+	quint64 check = 0;
+	memcpy_s((uchar*)&check, 8, cache.constData(), 8);
+	if (check >=((0xffffffffffffffff >>32) * difficultyWall))
+	{
+		return true;
+	}
+	return false;
 }
 void SocketPair::someoneDisconnected()
 {
@@ -78,10 +96,21 @@ void SocketPair::leftReadyRead()
 		return;
 	}
 	if (difficultyWall == 0)goto skipcheck;
-	if (!checkKey(header.key))
+	if (protocolType)
 	{
-		emit left->disconnected();
-		return;
+		if (!checkKeyLiner(header.key))
+		{
+			emit left->disconnected();
+			return;
+		}
+	}
+	else
+	{
+		if (!checkKeyExponential(header.key))
+		{
+			emit left->disconnected();
+			return;
+		}
 	}
 skipcheck:
 	switch (header.statusCode)

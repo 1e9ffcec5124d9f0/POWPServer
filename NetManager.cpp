@@ -12,7 +12,23 @@ NetManager::NetManager()
 }
 void NetManager::acceptNewConnection()
 {
-	SocketPair* x = new SocketPair(server->nextPendingConnection(), globalDifficultyWall,this);
+	quint32 diff;
+	auto temp = globalSetting["globalDifficultyWall"].toString().toUInt();
+	diff = (quint32)temp;
+	SocketPair* x;
+	if (globalSetting["protocolType"].toString() == QString("liner"))
+	{
+		x = new SocketPair(server->nextPendingConnection(),diff, true, this);
+	}
+	else if(globalSetting["protocolType"].toString() == QString("exponential"))
+	{
+		x = new SocketPair(server->nextPendingConnection(),diff,false , this);
+	}
+	else
+	{
+		server->nextPendingConnection()->close();
+		throw "setting.json protocolType error";
+	}
 	clientList.push_back(x);
 	connect(x, &SocketPair::iNeedDelete, this, &NetManager::socketPairDisconnected);
 }
