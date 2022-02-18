@@ -23,3 +23,4 @@ struct POWPHeader
 
 QByteArray getRandomBytes(int nLen);
 void loadSetting();
+void saveSetting();

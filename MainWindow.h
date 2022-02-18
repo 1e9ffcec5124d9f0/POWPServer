@@ -14,4 +14,10 @@ public:
 public slots:
 	void recvNewConnectionSlot(SocketPair* x);
 	void socketPairDisconnectedSlot(SocketPair* x);
+	void bindIpChanged(QString x);
+	void bindPortChanged(QString x);
+	void retransmissionIpChanged(QString x);
+	void retransmissionPortChanged(QString x);
+	void saveButtonClicked(bool x);
+	void diffLineEditChanged(QString x);
 };

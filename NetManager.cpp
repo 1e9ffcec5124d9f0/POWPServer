@@ -4,7 +4,7 @@ NetManager::NetManager(QObject* parent):QObject(parent)
 	globalDifficultyWall = globalSetting["globalDifficultyWall"].toInt();
 	server = new QTcpServer(this);
 	connect(server, &QTcpServer::newConnection, this, &NetManager::acceptNewConnection);
-	server->listen(QHostAddress::AnyIPv4, globalSetting["bindPort"].toInt());
+	server->listen(QHostAddress(globalSetting["bindIp"].toString()), globalSetting["bindPort"].toInt());
 	if (!server->isListening())
 	{
 		throw "bind port error";

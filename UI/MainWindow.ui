@@ -6,26 +6,197 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>988</width>
+    <height>785</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>POWPServer</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QTreeView" name="treeView">
+   <widget class="QTreeWidget" name="treeWidget">
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>20</y>
-      <width>311</width>
-      <height>541</height>
+      <y>70</y>
+      <width>341</width>
+      <height>681</height>
      </rect>
     </property>
+    <column>
+     <property name="text">
+      <string>对象名字</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>值</string>
+     </property>
+    </column>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>30</y>
+      <width>131</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>客户端列表:</string>
+    </property>
+   </widget>
+   <widget class="QGroupBox" name="groupBox">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>40</y>
+      <width>551</width>
+      <height>341</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>全局设置:</string>
+    </property>
+    <widget class="QLineEdit" name="bindIpLineEdit">
+     <property name="geometry">
+      <rect>
+       <x>80</x>
+       <y>30</y>
+       <width>141</width>
+       <height>31</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_2">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>40</y>
+       <width>72</width>
+       <height>15</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>监听IP:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="bindPortLineEdit">
+     <property name="geometry">
+      <rect>
+       <x>320</x>
+       <y>30</y>
+       <width>141</width>
+       <height>31</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_3">
+     <property name="geometry">
+      <rect>
+       <x>240</x>
+       <y>40</y>
+       <width>72</width>
+       <height>15</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>监听端口:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_4">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>90</y>
+       <width>72</width>
+       <height>15</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>转发IP:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="retransIpLineEdit">
+     <property name="geometry">
+      <rect>
+       <x>80</x>
+       <y>80</y>
+       <width>141</width>
+       <height>31</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_5">
+     <property name="geometry">
+      <rect>
+       <x>240</x>
+       <y>90</y>
+       <width>72</width>
+       <height>15</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>转发端口:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="retransPortLineEdit">
+     <property name="geometry">
+      <rect>
+       <x>320</x>
+       <y>80</y>
+       <width>141</width>
+       <height>31</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="saveSettingPushButton">
+     <property name="geometry">
+      <rect>
+       <x>370</x>
+       <y>290</y>
+       <width>93</width>
+       <height>28</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>保存设置</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_6">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>140</y>
+       <width>51</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>难度:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="diffLineEdit">
+     <property name="geometry">
+      <rect>
+       <x>80</x>
+       <y>130</y>
+       <width>141</width>
+       <height>31</height>
+      </rect>
+     </property>
+    </widget>
    </widget>
   </widget>
  </widget>
  <resources/>
  <connections/>
+ <slots>
+  <slot>bindIpChanged()</slot>
+  <slot>bindPortChanged()</slot>
+  <slot>retransmissionIpChanged()</slot>
+  <slot>retransmissionPortChanged()</slot>
+  <slot>saveButtonClicked()</slot>
+ </slots>
 </ui>

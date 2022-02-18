@@ -17,6 +17,15 @@ void loadSetting()
 	}
 	globalSetting = document.object();
 }
+void saveSetting()
+{
+	QJsonDocument doc(globalSetting);
+	QByteArray data = doc.toJson();
+	QFile file("setting.json");
+	file.open(QIODevice::WriteOnly);
+	file.write(data);
+	file.close();
+}
 
 QByteArray getRandomBytes(int nLen)
 {
