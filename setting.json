@@ -6,5 +6,6 @@
     "pingPongTimeOut": 3000,
     "protocolType": "liner",
     "retransmissionIp": "127.0.0.1",
-    "retransmissionPort": 25565
+    "retransmissionPort": 25565,
+    "checkInvalidTime ": 3000
 }

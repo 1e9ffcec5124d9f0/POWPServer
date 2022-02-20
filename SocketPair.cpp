@@ -19,6 +19,7 @@ SocketPair::SocketPair(QTcpSocket* Left,quint32 difficulty ,bool type,QObject* p
 		connect(right, &QTcpSocket::disconnected, this, &SocketPair::someoneDisconnected);
 		connect(left, &QTcpSocket::readyRead, this, &SocketPair::leftReadyRead);
 		connect(right, &QTcpSocket::readyRead, this, &SocketPair::rightReadyRead);
+		connect(&skipCheckTimer, &QTimer::timeout, this, &SocketPair::skipCheckTimerTimeOut);
 		initPOWP();
 	}
 }
@@ -96,6 +97,7 @@ void SocketPair::leftReadyRead()
 		return;
 	}
 	if (difficultyWall == 0)goto skipcheck;
+	if (skipCheck)goto skipcheck;
 	if (protocolType)
 	{
 		if (!checkKeyLiner(header.key))
@@ -137,4 +139,26 @@ void SocketPair::rightReadyRead()	//转发来自服务器的数据
 	QByteArray head((char*)&header, sizeof(POWPHeader));
 	head += serverData;
 	left->write(head);
+}
+
+void SocketPair::changeDifficulty(quint32 diff)
+{
+	skipCheck = true;
+	skipCheckTimer.start(globalSetting["checkInvalidTime"].toInt());
+	difficultyWall = diff;
+	POWPHeader header;
+	header.dataLen = 0;
+	header.difficulty = diff;
+	header.statusCode = STATUS_CODE_DIFFICULTY_CHANGE;
+	header.key = 0;
+	QByteArray head((char*)&header, sizeof(POWPHeader));
+	cache = getRandomBytes(8);
+	head += cache;	
+	left->write(head);
+}
+
+void SocketPair::skipCheckTimerTimeOut()
+{
+	skipCheckTimer.stop();
+	skipCheck = false;
 }

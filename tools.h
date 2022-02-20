@@ -12,10 +12,11 @@ extern QJsonObject globalSetting;
 #define STATUS_CODE_INIT_EXPONENTIAL 2
 #define STATUS_CODE_PING 3
 #define STATUS_CODE_PONG 4
+#define STATUS_CODE_DIFFICULTY_CHANGE 5
 struct POWPHeader
 {
 	quint8 flag[4] = { 'P','O','W','P' };//POWP
-	quint32 difficulty = 0;//DiffcultyWall
+	quint32 difficulty = 0;//DifficultyWall
 	quint8 statusCode;
 	quint64 key = 0;
 	quint64 dataLen = 0;

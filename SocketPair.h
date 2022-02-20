@@ -3,6 +3,7 @@
 #include<QtNetwork/qtcpserver.h>
 #include<QtNetwork/qtcpsocket.h>
 #include<QtNetwork/qhostaddress.h>
+#include<QtCore/qtimer>
 class SocketPair:public QObject
 {
 	Q_OBJECT
@@ -15,12 +16,16 @@ public:
 	QTcpSocket* right;
 	QByteArray cache;
 	quint32 difficultyWall;
+	bool skipCheck = false;
 	bool protocolType;
+	QTimer skipCheckTimer;
 	SocketPair(QTcpSocket* Left, quint32 difficulty,bool type, QObject* parent);
+	void changeDifficulty(quint32 diff);
 public slots:
 	void someoneDisconnected();
 	void leftReadyRead();
 	void rightReadyRead();
+	void skipCheckTimerTimeOut();
 signals:
 	void iNeedDelete(SocketPair* x);
 
