@@ -1,11 +1,13 @@
 {
     "bindIp": "127.0.0.1",
     "bindPort": 8888,
-    "globalDifficultyWall": "4290000000",
+    "globalDifficultyWall": "4204967295",
     "pingInterval": 3000,
     "pingPongTimeOut": 3000,
     "protocolType": "liner",
     "retransmissionIp": "127.0.0.1",
     "retransmissionPort": 25565,
-    "checkInvalidTime ": 3000
+    "pingPongIntervalTime": 5000,
+    "pingPongTolerance": 500,
+    "checkInvalidTime": 3000
 }

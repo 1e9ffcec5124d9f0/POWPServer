@@ -4,6 +4,7 @@
 #include<QtNetwork/qtcpsocket.h>
 #include<QtNetwork/qhostaddress.h>
 #include<QtCore/qtimer>
+#include <QtWidgets/qlistwidget.h>
 class SocketPair:public QObject
 {
 	Q_OBJECT
@@ -19,14 +20,20 @@ public:
 	bool skipCheck = false;
 	bool protocolType;
 	QTimer skipCheckTimer;
+	QTimer pingPongTimer;
+	QTimer pingPongTimerOutTimer;
+	bool isPingPongING = false;
 	SocketPair(QTcpSocket* Left, quint32 difficulty,bool type, QObject* parent);
 	void changeDifficulty(quint32 diff);
+	QListWidget* loger;
 public slots:
 	void someoneDisconnected();
 	void leftReadyRead();
 	void rightReadyRead();
 	void skipCheckTimerTimeOut();
+	void sendPingPong();
+	void pingPongTimerOut();
 signals:
 	void iNeedDelete(SocketPair* x);
-
+	
 };

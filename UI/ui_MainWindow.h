@@ -1,13 +1,13 @@
 /********************************************************************************
-** Form generated from reading UI file 'MainWindowmncBKn.ui'
+** Form generated from reading UI file 'MainWindowfNHVIa.ui'
 **
 ** Created by: Qt User Interface Compiler version 5.14.2
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
 
-#ifndef MAINWINDOWMNCBKN_H
-#define MAINWINDOWMNCBKN_H
+#ifndef MAINWINDOWFNHVIA_H
+#define MAINWINDOWFNHVIA_H
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
@@ -15,6 +15,7 @@
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
+#include <QtWidgets/QListWidget>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QTreeWidget>
@@ -40,6 +41,7 @@ public:
     QPushButton *saveSettingPushButton;
     QLabel *label_6;
     QLineEdit *diffLineEdit;
+    QListWidget *listWidget;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -56,7 +58,7 @@ public:
         label->setGeometry(QRect(30, 30, 131, 31));
         groupBox = new QGroupBox(centralwidget);
         groupBox->setObjectName(QString::fromUtf8("groupBox"));
-        groupBox->setGeometry(QRect(400, 40, 551, 341));
+        groupBox->setGeometry(QRect(400, 40, 561, 341));
         bindIpLineEdit = new QLineEdit(groupBox);
         bindIpLineEdit->setObjectName(QString::fromUtf8("bindIpLineEdit"));
         bindIpLineEdit->setGeometry(QRect(80, 30, 141, 31));
@@ -90,6 +92,9 @@ public:
         diffLineEdit = new QLineEdit(groupBox);
         diffLineEdit->setObjectName(QString::fromUtf8("diffLineEdit"));
         diffLineEdit->setGeometry(QRect(80, 130, 141, 31));
+        listWidget = new QListWidget(centralwidget);
+        listWidget->setObjectName(QString::fromUtf8("listWidget"));
+        listWidget->setGeometry(QRect(400, 410, 561, 341));
         MainWindow->setCentralWidget(centralwidget);
 
         retranslateUi(MainWindow);
@@ -121,4 +126,4 @@ namespace Ui {
 
 QT_END_NAMESPACE
 
-#endif // MAINWINDOWMNCBKN_H
+#endif // MAINWINDOWFNHVIA_H

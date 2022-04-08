@@ -52,7 +52,7 @@
      <rect>
       <x>400</x>
       <y>40</y>
-      <width>551</width>
+      <width>561</width>
       <height>341</height>
      </rect>
     </property>
@@ -187,6 +187,16 @@
       </rect>
      </property>
     </widget>
+   </widget>
+   <widget class="QListWidget" name="listWidget">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>410</y>
+      <width>561</width>
+      <height>341</height>
+     </rect>
+    </property>
    </widget>
   </widget>
  </widget>

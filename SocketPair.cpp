@@ -1,16 +1,19 @@
 #include"SocketPair.h"
+#include"MainWindow.h"
 SocketPair::SocketPair(QTcpSocket* Left,quint32 difficulty ,bool type,QObject* parent):QObject(parent)
 {
 	protocolType = type;
 	left = Left;
 	left->setParent(this);
 	right = new QTcpSocket(this);
-	right->connectToHost(globalSetting["retransmissionIp"].toString(), globalSetting["retransmissionPort"].toInt());
-	if (!right->isOpen())
+	right->connectToHost(globalSetting["retransmissionIp"].toString(), globalSetting["retransmissionPort"].toInt());;
+	loger = ((MainWindow*)(this->parent()->parent()))->listWidget;
+	if (!right->isValid())
 	{
 		left->close();
 		emit iNeedDelete(this);
 		deleteLater();
+		
 	}
 	else
 	{
@@ -20,7 +23,12 @@ SocketPair::SocketPair(QTcpSocket* Left,quint32 difficulty ,bool type,QObject* p
 		connect(left, &QTcpSocket::readyRead, this, &SocketPair::leftReadyRead);
 		connect(right, &QTcpSocket::readyRead, this, &SocketPair::rightReadyRead);
 		connect(&skipCheckTimer, &QTimer::timeout, this, &SocketPair::skipCheckTimerTimeOut);
+		connect(&pingPongTimer, &QTimer::timeout, this, &SocketPair::sendPingPong);
+		connect(&pingPongTimerOutTimer, &QTimer::timeout, this, &SocketPair::pingPongTimerOut);
 		initPOWP();
+		QString log = QString::fromLocal8Bit("时间:") + QTime::currentTime().toString() + QString::fromLocal8Bit(".IP地址:") + left->peerAddress().toString() + QString::fromLocal8Bit("新连接建立");
+		loger->addItem(log);
+		loger->update();
 	}
 }
 void SocketPair::initPOWP()		//当初始建立连接时调用此
@@ -39,6 +47,7 @@ void SocketPair::initPOWP()		//当初始建立连接时调用此
 	cache = getRandomBytes(8);
 	head += cache;	//初始字节
 	left->write(head);
+	pingPongTimer.start(globalSetting["pingPongIntervalTime"].toInt());
 }
 bool SocketPair::checkKeyExponential(quint64 key)
 {
@@ -82,26 +91,38 @@ void SocketPair::leftReadyRead()
 	QByteArray head = left->read(sizeof(POWPHeader));
 	if (head.size() < sizeof(POWPHeader))
 	{
+		QString log=QString::fromLocal8Bit("时间:")+ QTime::currentTime().toString()+QString::fromLocal8Bit(".IP地址:")+left->peerAddress().toString()+QString::fromLocal8Bit("断开，原因:");
+		loger->addItem(log+QString::fromLocal8Bit("未按指定协议连接，主动关闭"));
+		loger->update();
 		emit left->disconnected();
 		return;
 	}
 	if (*((quint32*)head.constData()) != 0x50574f50)	//50 57 4f 50 为PWOP的ascii码//倒序
 	{
+		QString log = QString::fromLocal8Bit("时间:") + QTime::currentTime().toString() + QString::fromLocal8Bit(".IP地址:") + left->peerAddress().toString() + QString::fromLocal8Bit("断开，原因:");
+		loger->addItem(log + QString::fromLocal8Bit("未按指定协议连接，主动关闭"));
+		loger->update();
 		emit left->disconnected();
 		return;
 	}
 	memcpy_s(&header, sizeof(POWPHeader), head.constData(), sizeof(POWPHeader));
+	if (skipCheck)goto skipcheck;
 	if (header.difficulty < difficultyWall)
 	{
+		QString log = QString::fromLocal8Bit("时间:") + QTime::currentTime().toString() + QString::fromLocal8Bit(".IP地址:") + left->peerAddress().toString() + QString::fromLocal8Bit("断开，原因:");
+		loger->addItem(log + QString::fromLocal8Bit("左侧难度低于要求，主动关闭"));
+		loger->update();
 		emit left->disconnected();
 		return;
 	}
 	if (difficultyWall == 0)goto skipcheck;
-	if (skipCheck)goto skipcheck;
 	if (protocolType)
 	{
 		if (!checkKeyLiner(header.key))
 		{
+			QString log = QString::fromLocal8Bit("时间:") + QTime::currentTime().toString() + QString::fromLocal8Bit(".IP地址:") + left->peerAddress().toString() + QString::fromLocal8Bit("断开，原因:");
+			loger->addItem(log + QString::fromLocal8Bit("Key校验失败，主动关闭"));
+			loger->update();
 			emit left->disconnected();
 			return;
 		}
@@ -110,6 +131,9 @@ void SocketPair::leftReadyRead()
 	{
 		if (!checkKeyExponential(header.key))
 		{
+			QString log = QString::fromLocal8Bit("时间:") + QTime::currentTime().toString() + QString::fromLocal8Bit(".IP地址:") + left->peerAddress().toString() + QString::fromLocal8Bit("断开，原因:");
+			loger->addItem(log + QString::fromLocal8Bit("Key校验失败，主动关闭"));
+			loger->update();
 			emit left->disconnected();
 			return;
 		}
@@ -122,7 +146,16 @@ skipcheck:
 		right->write(left->read(header.dataLen));
 		break;
 	}
+	case STATUS_CODE_PONG:
+	{
+		pingPongTimerOutTimer.stop();
+		isPingPongING = false;
+		break;
+	}
 	default:
+		QString log = QString::fromLocal8Bit("时间:") + QTime::currentTime().toString() + QString::fromLocal8Bit(".IP地址:") + left->peerAddress().toString() + QString::fromLocal8Bit("断开，原因:");
+		loger->addItem(log + QString::fromLocal8Bit("无效的协议状态码，主动关闭"));
+		loger->update();
 		emit left->disconnected();
 		break;
 	}
@@ -144,6 +177,9 @@ void SocketPair::rightReadyRead()	//转发来自服务器的数据
 void SocketPair::changeDifficulty(quint32 diff)
 {
 	skipCheck = true;
+	QString log = QString::fromLocal8Bit("时间:") + QTime::currentTime().toString() + QString::fromLocal8Bit(".IP地址:") + left->peerAddress().toString();
+	loger->addItem(log + QString::fromLocal8Bit(",难度变更"));
+	loger->update();
 	skipCheckTimer.start(globalSetting["checkInvalidTime"].toInt());
 	difficultyWall = diff;
 	POWPHeader header;
@@ -161,4 +197,28 @@ void SocketPair::skipCheckTimerTimeOut()
 {
 	skipCheckTimer.stop();
 	skipCheck = false;
+}
+void SocketPair::sendPingPong()
+{
+	if (!isPingPongING)
+	{
+		isPingPongING = true;
+		POWPHeader header;
+		header.dataLen = 0;
+		header.difficulty = difficultyWall;
+		header.statusCode = STATUS_CODE_PING;
+		header.key = 0;
+		QByteArray head((char*)&header, sizeof(POWPHeader));
+		left->write(head);
+		pingPongTimerOutTimer.start(globalSetting["pingPongTolerance"].toInt());
+	}
+}
+
+void SocketPair::pingPongTimerOut()
+{
+	pingPongTimerOutTimer.stop();
+	QString log = QString::fromLocal8Bit("时间:") + QTime::currentTime().toString() + QString::fromLocal8Bit(".IP地址:") + left->peerAddress().toString() + QString::fromLocal8Bit("断开，原因:");
+	loger->addItem(log + QString::fromLocal8Bit("心跳包超时，主动关闭"));
+	loger->update();
+	emit left->disconnected();
 }
