@@ -105,8 +105,8 @@ void SocketPair::leftReadyRead()
 		emit left->disconnected();
 		return;
 	}
+	difficultyWall = (header.difficulty > difficultyWall) ? header.difficulty : difficultyWall;
 	memcpy_s(&header, sizeof(POWPHeader), head.constData(), sizeof(POWPHeader));
-	if (skipCheck)goto skipcheck;
 	if (header.difficulty < difficultyWall)
 	{
 		QString log = QString::fromLocal8Bit("时间:") + QTime::currentTime().toString() + QString::fromLocal8Bit(".IP地址:") + left->peerAddress().toString() + QString::fromLocal8Bit("断开，原因:");
@@ -115,7 +115,7 @@ void SocketPair::leftReadyRead()
 		emit left->disconnected();
 		return;
 	}
-	if (difficultyWall == 0)goto skipcheck;
+	if (skipCheck|| difficultyWall==0)goto skipcheck;
 	if (protocolType)
 	{
 		if (!checkKeyLiner(header.key))
@@ -150,6 +150,12 @@ skipcheck:
 	{
 		pingPongTimerOutTimer.stop();
 		isPingPongING = false;
+		break;
+	}
+	case STATUS_CODE_ACCEPT_CHANGE:
+	{
+		skipCheckTimer.stop();
+		skipCheck = false;
 		break;
 	}
 	default:

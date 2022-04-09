@@ -13,6 +13,7 @@ extern QJsonObject globalSetting;
 #define STATUS_CODE_PING 3
 #define STATUS_CODE_PONG 4
 #define STATUS_CODE_DIFFICULTY_CHANGE 5
+#define STATUS_CODE_ACCEPT_CHANGE 6
 struct POWPHeader
 {
 	quint8 flag[4] = { 'P','O','W','P' };//POWP
